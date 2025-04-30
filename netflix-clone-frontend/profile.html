@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Netflix Clone - Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col">
+  <header class="bg-gray-800 p-4 flex items-center justify-between">
+    <h1 class="text-2xl font-bold cursor-pointer" onclick="window.location.href='browse.html'">Netflix Clone</h1>
+    <nav>
+      <a href="browse.html" class="px-3 hover:text-red-600 transition">Browse</a>
+      <a href="profile.html" class="px-3 text-red-600 font-bold">Profile</a>
+      <a href="login.html" class="px-3 hover:text-red-600 transition">Logout</a>
+    </nav>
+  </header>
+  <main class="flex-grow p-6 max-w-4xl mx-auto">
+    <h2 class="text-3xl font-semibold mb-6">User Profile</h2>
+    <div id="profileInfo" class="mb-6">
+      <!-- User info will be displayed here -->
+    </div>
+    <h3 class="text-2xl font-semibold mb-4">Watchlist</h3>
+    <div id="watchlist" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+      <!-- Watchlist movies will be displayed here -->
+    </div>
+  </main>
+  <footer class="bg-gray-800 p-4 text-center text-sm text-gray-400">
+    &copy; 2024 Netflix Clone. All rights reserved.
+  </footer>
+  <script>
+    // For demo, mock user data and watchlist
+    const user = {
+      id: 1,
+      username: 'user1',
+      watchlist: [1] // movie IDs
+    };
+
+    const movies = [
+      { id: 1, title: 'Example Movie', year: 2022, genre: 'Drama', videoUrl: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4' },
+      // Add more movies as needed
+    ];
+
+    const profileInfo = document.getElementById('profileInfo');
+    const watchlistDiv = document.getElementById('watchlist');
+
+    function displayProfile() {
+      profileInfo.innerHTML = `
+        <p><strong>Username:</strong> ${user.username}</p>
+      `;
+    }
+
+    function displayWatchlist() {
+      watchlistDiv.innerHTML = '';
+      if (user.watchlist.length === 0) {
+        watchlistDiv.innerHTML = '<p>No movies in watchlist.</p>';
+        return;
+      }
+      user.watchlist.forEach(movieId => {
+        const movie = movies.find(m => m.id === movieId);
+        if (movie) {
+          const card = document.createElement('div');
+          card.className = 'bg-gray-800 rounded overflow-hidden shadow-lg cursor-pointer hover:shadow-red-600 transition p-2';
+          card.innerHTML = `
+            <h4 class="font-bold">${movie.title} (${movie.year})</h4>
+            <p class="text-sm text-gray-400">${movie.genre}</p>
+            <button class="mt-2 bg-red-600 hover:bg-red-700 py-1 px-3 rounded text-sm" onclick="removeFromWatchlist(${movie.id})">Remove</button>
+          `;
+          card.querySelector('button').addEventListener('click', (e) => {
+            e.stopPropagation();
+            removeFromWatchlist(movie.id);
+          });
+          card.addEventListener('click', () => {
+            window.location.href = 'detail.html?id=' + movie.id;
+          });
+          watchlistDiv.appendChild(card);
+        }
+      });
+    }
+
+    function removeFromWatchlist(movieId) {
+      user.watchlist = user.watchlist.filter(id => id !== movieId);
+      displayWatchlist();
+      alert('Removed from watchlist');
+    }
+
+    displayProfile();
+    displayWatchlist();
+  </script>
+</body>
+</html>
